@@ -8,7 +8,9 @@ const Dashboard = () => {
   const [showModal, setShowModal] = useState(false);
   const [newTask, setNewTask] = useState({ title: '', description: '', assignedTo: '', deadline: '' });
 
+  // Retrieve stored user info from localStorage
   const role = localStorage.getItem('role');
+  const userName = localStorage.getItem('userName');
   const token = localStorage.getItem('token');
   const headers = { Authorization: `Bearer ${token}` };
 
@@ -21,35 +23,29 @@ const Dashboard = () => {
   }, []);
 
   const fetchData = async () => {
-    // Updated to Railway URL
     const res = await axios.get(`${API_URL}/api/tasks`, { headers });
     setTasks(res.data);
   };
 
   const fetchMembers = async () => {
-    // Updated to Railway URL
     const res = await axios.get(`${API_URL}/api/tasks/members`, { headers });
     setMembers(res.data);
   };
 
   const handleCreateTask = async (e) => {
     e.preventDefault();
-    // Updated to Railway URL
     await axios.post(`${API_URL}/api/tasks`, newTask, { headers });
     setShowModal(false);
     fetchData();
   };
 
   const updateStatus = async (id, status) => {
-    // Updated to Railway URL
     await axios.patch(`${API_URL}/api/tasks/${id}`, { status }, { headers });
     fetchData();
   };
 
-  // Logic for Overdue tasks
   const isOverdue = (deadline) => new Date(deadline) < new Date() && deadline;
 
-  // Reusable Formatter for Day, Date, and Time
   const formatFullDate = (date) => {
     if (!date) return "N/A";
     return new Date(date).toLocaleDateString('en-GB', {
@@ -64,9 +60,29 @@ const Dashboard = () => {
 
   return (
     <div style={{ backgroundColor: '#f8fafc', minHeight: '100vh', padding: '2rem' }}>
-      <header style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2rem' }}>
-        <h2><LayoutDashboard inline /> Team Workspace</h2>
-        <button onClick={() => {localStorage.clear(); window.location.href='/';}} style={logoutBtn}><LogOut size={16}/> Logout</button>
+      {/* Updated Header with Name and Role */}
+      <header style={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center', 
+        marginBottom: '2rem',
+        padding: '1rem',
+        background: '#fff',
+        borderRadius: '12px',
+        boxShadow: '0 2px 10px rgba(0,0,0,0.05)'
+      }}>
+        <div>
+          <h2 style={{ margin: 0, color: '#1e293b' }}>
+            <LayoutDashboard style={{ display: 'inline', marginRight: '10px', verticalAlign: 'bottom' }} /> 
+            Team Workspace
+          </h2>
+          <p style={{ margin: '5px 0 0 0', color: '#64748b', fontSize: '14px' }}>
+            Welcome, <strong>{userName || 'User'}</strong> | <span style={roleBadgeStyle(role)}>{role}</span>
+          </p>
+        </div>
+        <button onClick={() => {localStorage.clear(); window.location.href='/';}} style={logoutBtn}>
+          <LogOut size={16}/> Logout
+        </button>
       </header>
 
       {/* Stats Cards */}
@@ -161,6 +177,16 @@ const badgeStyle = (status) => ({
     fontWeight: 'bold',
     background: status === 'done' ? '#dcfce7' : status === 'in-progress' ? '#fef9c3' : '#e2e8f0',
     color: status === 'done' ? '#166534' : status === 'in-progress' ? '#854d0e' : '#475569',
-  });
+});
+
+const roleBadgeStyle = (role) => ({
+  textTransform: 'capitalize',
+  fontWeight: 'bold',
+  fontSize: '12px',
+  padding: '2px 8px',
+  borderRadius: '4px',
+  background: role === 'admin' ? '#fee2e2' : '#dbeafe',
+  color: role === 'admin' ? '#991b1b' : '#1e40af'
+});
 
 export default Dashboard;

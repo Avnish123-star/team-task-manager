@@ -12,30 +12,37 @@ const Dashboard = () => {
   const token = localStorage.getItem('token');
   const headers = { Authorization: `Bearer ${token}` };
 
+  // Your Railway Production URL
+  const API_URL = "https://team-task-manager-production-45c7.up.railway.app";
+
   useEffect(() => {
     fetchData();
     if (role === 'admin') fetchMembers();
   }, []);
 
   const fetchData = async () => {
-    const res = await axios.get('http://localhost:5000/api/tasks', { headers });
+    // Updated to Railway URL
+    const res = await axios.get(`${API_URL}/api/tasks`, { headers });
     setTasks(res.data);
   };
 
   const fetchMembers = async () => {
-    const res = await axios.get('http://localhost:5000/api/tasks/members', { headers });
+    // Updated to Railway URL
+    const res = await axios.get(`${API_URL}/api/tasks/members`, { headers });
     setMembers(res.data);
   };
 
   const handleCreateTask = async (e) => {
     e.preventDefault();
-    await axios.post('http://localhost:5000/api/tasks', newTask, { headers });
+    // Updated to Railway URL
+    await axios.post(`${API_URL}/api/tasks`, newTask, { headers });
     setShowModal(false);
     fetchData();
   };
 
   const updateStatus = async (id, status) => {
-    await axios.patch(`http://localhost:5000/api/tasks/${id}`, { status }, { headers });
+    // Updated to Railway URL
+    await axios.patch(`${API_URL}/api/tasks/${id}`, { status }, { headers });
     fetchData();
   };
 
@@ -91,7 +98,6 @@ const Dashboard = () => {
                 <strong>Assigned on:</strong> <br/> {formatFullDate(task.createdAt)}
               </p>
 
-              {/* Updated Deadline with Full Day, Date, and Time */}
               <p style={{ fontSize: '11px', marginTop: '8px', color: isOverdue(task.deadline) ? '#ef4444' : '#475569' }}>
                 <strong>Deadline:</strong> <br/> {formatFullDate(task.deadline)}
               </p>

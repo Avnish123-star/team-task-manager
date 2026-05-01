@@ -7,18 +7,21 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
+  // Your Railway Backend URL
+  const API_URL = "https://team-task-manager-production-45c7.up.railway.app";
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+      // Added https:// prefix here
+      const res = await axios.post(`${API_URL}/api/auth/login`, { email, password });
       
-      // Save data for the entire session
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('role', res.data.user.role);
       localStorage.setItem('userName', res.data.user.name);
 
       alert(`Welcome back, ${res.data.user.name}!`);
-      navigate('/dashboard'); // Direct them to the Role-Based Dashboard
+      navigate('/dashboard'); 
     } catch (err) {
       alert("Invalid Email or Password");
     }

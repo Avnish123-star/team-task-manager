@@ -6,11 +6,14 @@ const Register = () => {
   const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'member' });
   const navigate = useNavigate();
 
+  // Your live Railway Backend URL
+  const API_URL = "https://team-task-manager-production-45c7.up.railway.app";
+
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      // Points to your Node.js server
-      await axios.post('http://localhost:5000/api/auth/register', formData);
+      // Updated to use the live API URL instead of localhost
+      await axios.post(`${API_URL}/api/auth/register`, formData);
       alert("Registration Successful! Now please login.");
       navigate('/');
     } catch (err) {

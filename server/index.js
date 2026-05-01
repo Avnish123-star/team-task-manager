@@ -22,15 +22,15 @@ app.use('/api/tasks', taskRoutes);
 
 // Test Route
 app.get('/', (req, res) => {
-  res.send('Team Task Manager API is running... 🚀');
+  res.send('Team Task Manager API is running... ');
 });
 
 // Database Connection
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('✅ MongoDB Connected'))
-  .catch((err) => console.log('❌ DB Connection Error:', err));
+  .then(() => console.log(' MongoDB Connected'))
+  .catch((err) => console.log(' DB Connection Error:', err));
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(` Server running on port ${PORT}`);
 });
